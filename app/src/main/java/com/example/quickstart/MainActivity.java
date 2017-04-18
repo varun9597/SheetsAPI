@@ -37,6 +37,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -54,6 +55,11 @@ public class MainActivity extends Activity
     private EditText mGetUsername;
     private EditText mGetPassword;
     ProgressDialog mProgress;
+    String uid = "";
+    String pass = "";
+    int choose = 0;
+
+    Intent report = new Intent(this,report.class);
 
     static final int REQUEST_ACCOUNT_PICKER = 1000;
     static final int REQUEST_AUTHORIZATION = 1001;
@@ -101,6 +107,8 @@ public class MainActivity extends Activity
             public void onClick(View v) {
                 mCallApiButton.setEnabled(true);
                 mOutputText.setText("");
+                uid = mGetUsername.getText().toString();
+                pass = mGetPassword.getText().toString();
                 getResultsFromApi();
                 mCallApiButton.setEnabled(true);
             }
@@ -335,6 +343,14 @@ public class MainActivity extends Activity
         private com.google.api.services.sheets.v4.Sheets mService = null;
         private Exception mLastError = null;
 
+        Context context;
+
+        private MakeRequestTask(Context context) {
+            this.context = context.getApplicationContext();
+        }
+
+
+
         MakeRequestTask(GoogleAccountCredential credential) {
             HttpTransport transport = AndroidHttp.newCompatibleTransport();
             JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
@@ -351,6 +367,7 @@ public class MainActivity extends Activity
         @Override
         protected List<String> doInBackground(Void... params) {
             try {
+
                 return getDataFromApi();
             } catch (Exception e) {
                 mLastError = e;
@@ -358,6 +375,7 @@ public class MainActivity extends Activity
                 return null;
             }
         }
+
 
         /**
          * Fetch a list of names and majors of students in a sample spreadsheet:
@@ -369,17 +387,22 @@ public class MainActivity extends Activity
             String spreadsheetId = "1KNRTAF5XPY-B5M4Dh0pZVpy6g7s3Q-zq9mY3xt5iE28";
             String range = "Sheet1!A3:B";
             List<String> results = new ArrayList<String>();
+            List<String> passwordlist = new ArrayList<String>();
+
+
             ValueRange response = this.mService.spreadsheets().values()
                     .get(spreadsheetId, range)
                     .execute();
-            List<List<Object>> values = response.getValues();
-            if (values != null) {
-                results.add("ID, Password");
-                for (List row : values) {
-                    results.add(row.get(0) + ", " + row.get(1));
+
+                List<List<Object>> values = response.getValues();
+                if (values != null) {
+
+                    for (List row : values) {
+                        results.add(row.get(0) + "");
+                    }
                 }
-            }
-            return results;
+                return results;
+
         }
 
 
@@ -393,11 +416,24 @@ public class MainActivity extends Activity
         @Override
         protected void onPostExecute(List<String> output) {
             mProgress.hide();
-            if (output == null || output.size() == 0) {
-                mOutputText.setText("No results returned.");
-            } else {
-                output.add(0, "Data retrieved using the Google Sheets API:");
-                mOutputText.setText(TextUtils.join("\n", output));
+
+            String reverse = new StringBuffer(pass).reverse().toString();
+
+            for (String string : output) {
+                if(string.equalsIgnoreCase(uid)) {
+                    Intent intent_name = new Intent();
+                    intent_name.setClass(getApplicationContext(), report.class);
+                    startActivity(intent_name);
+                }
+                    //if (output == null) {
+              //mOutputText.setText("No results returned.");
+             //else {
+                 //   output.add("Incorrect Credentials");
+               //     mOutputText.setText(TextUtils.join("\n",output));
+              //  }
+
+                //output.add(0, "Data retrieved using the Google Sheets API:");
+                //mOutputText.setText(TextUtils.join("\n", output));
             }
         }
 
@@ -422,4 +458,6 @@ public class MainActivity extends Activity
             }
         }
     }
+
+
 }
