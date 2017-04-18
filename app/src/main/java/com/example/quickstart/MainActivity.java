@@ -387,7 +387,7 @@ public class MainActivity extends Activity
             String spreadsheetId = "1KNRTAF5XPY-B5M4Dh0pZVpy6g7s3Q-zq9mY3xt5iE28";
             String range = "Sheet1!A3:B";
             List<String> results = new ArrayList<String>();
-            List<String> passwordlist = new ArrayList<String>();
+            
 
 
             ValueRange response = this.mService.spreadsheets().values()
