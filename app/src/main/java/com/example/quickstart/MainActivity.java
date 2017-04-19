@@ -405,7 +405,7 @@ public class MainActivity extends Activity
          */
         private List<String> getDataFromApi() throws IOException {
             String spreadsheetId = "1KNRTAF5XPY-B5M4Dh0pZVpy6g7s3Q-zq9mY3xt5iE28";
-            String range = "Sheet1!A3:B";
+            String range = "Sheet1!B6:F";
             List<String> results = new ArrayList<String>();
 
             ValueRange response = this.mService.spreadsheets().values()
@@ -415,7 +415,7 @@ public class MainActivity extends Activity
                 List<List<Object>> values = response.getValues();
                 if (values != null) {
                     for (List row : values) {
-                        results.add(row.get(0) + "");
+                        results.add(row.get(2) + "");
                     }
                 }
                 return results;
@@ -423,7 +423,7 @@ public class MainActivity extends Activity
 
         private List<String> getDataFromApi2() throws IOException {
             String spreadsheetId = "1KNRTAF5XPY-B5M4Dh0pZVpy6g7s3Q-zq9mY3xt5iE28";
-            String range = "Sheet1!A3:C";
+            String range = "Sheet1!B6:F";
             List<String> results = new ArrayList<String>();
 
             ValueRange response = this.mService.spreadsheets().values()
@@ -433,7 +433,7 @@ public class MainActivity extends Activity
             List<List<Object>> values = response.getValues();
             if (values != null) {
                 for (List row : values) {
-                    results.add(row.get(1) + "");
+                    results.add(row.get(0) + "");
                 }
             }
             return results;
@@ -441,7 +441,7 @@ public class MainActivity extends Activity
 
         private List<String> getDataFromApi3() throws IOException {
             String spreadsheetId = "1KNRTAF5XPY-B5M4Dh0pZVpy6g7s3Q-zq9mY3xt5iE28";
-            String range = "Sheet1!A3:C";
+            String range = "Sheet1!B6:F";
             List<String> results = new ArrayList<String>();
 
             ValueRange response = this.mService.spreadsheets().values()
@@ -451,7 +451,7 @@ public class MainActivity extends Activity
             List<List<Object>> values = response.getValues();
             if (values != null) {
                 for (List row : values) {
-                    results.add(row.get(2) + "");
+                    results.add(row.get(4) + "");
                 }
             }
             return results;

@@ -12,15 +12,14 @@ public class report extends AppCompatActivity  {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_report);
-        /*attendance = (TextView) findViewById(R.id.textView);
+        attendance = (TextView) findViewById(R.id.textView);
         String value = attend.myclass();
-        attendance.setText(value);*/
+        attendance.setText(value);
 
 
     }
 }
 
-/*
 class attend extends MainActivity {
     static String myclass() {
 
@@ -28,4 +27,4 @@ class attend extends MainActivity {
         return value;
 
     }
-}*/
+}
