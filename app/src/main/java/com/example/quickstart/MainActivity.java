@@ -22,6 +22,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
@@ -29,6 +30,7 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.text.method.ScrollingMovementMethod;
 import android.view.View;
@@ -472,27 +474,27 @@ public class MainActivity extends Activity
             List<String> PName = output.get(1);
             for (String string : Uname) {
                 if (string.equalsIgnoreCase(uid)) {
-                    for (int i =0;i<=PName.size();i++) {
+                    for (int i = 0; i <= PName.size(); i++) {
                         String string2 = PName.get(i);
                         index = i;
                         if (string2.equalsIgnoreCase(pass)) {
-                            Intent intent_name = new Intent(MainActivity.this,report.class);
+                            Intent intent_name = new Intent(MainActivity.this, report.class);
                             intent_name.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             startActivity(intent_name);
                             break;
                         }
                     }
+
+                } else {
+                    List<String> printing = new ArrayList<String>();
+                    printing.add(0, "Incorrect Credentials");
+                    mOutputText.setText(TextUtils.join("\n", printing));
                 }
             }
         }
-        /*else {
-                    List<String> printing = new ArrayList<String>();
-                    printing.add("Incorrect Credentials");
-                    mOutputText.setText(TextUtils.join("\n", printing));
-                }*//*
 
              //output.add(0, "Data retrieved using the Google Sheets API:");
-             //mOutputText.setText(TextUtils.join("\n", output));*/
+             //mOutputText.setText(TextUtils.join("\n", output));
 
 
         @Override
