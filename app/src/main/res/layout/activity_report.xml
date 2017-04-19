@@ -6,4 +6,15 @@
     android:layout_height="match_parent"
     tools:context="com.example.quickstart.report">
 
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="349dp"
+        android:layout_height="45dp"
+        android:text="TextView"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginRight="8dp"
+        app:layout_constraintRight_toRightOf="parent" />
 </android.support.constraint.ConstraintLayout>

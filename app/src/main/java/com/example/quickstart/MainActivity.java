@@ -49,6 +49,7 @@ import pub.devrel.easypermissions.EasyPermissions;
 
 public class MainActivity extends Activity
         implements EasyPermissions.PermissionCallbacks {
+
     GoogleAccountCredential mCredential;
     private TextView mOutputText;
     private Button mCallApiButton;
@@ -58,6 +59,9 @@ public class MainActivity extends Activity
     String uid = "";
     String pass = "";
     int choose = 0;
+    public static int index;
+
+    public static List<String> att = new ArrayList<String>();
 
     Intent report = new Intent(this,report.class);
 
@@ -339,7 +343,7 @@ public class MainActivity extends Activity
      * An asynchronous task that handles the Google Sheets API call.
      * Placing the API calls in their own task ensures the UI stays responsive.
      */
-    private class MakeRequestTask extends AsyncTask<Void, Void, List<String>> {
+    private class MakeRequestTask extends AsyncTask<Void, Void, List<List<String>>>{
         private com.google.api.services.sheets.v4.Sheets mService = null;
         private Exception mLastError = null;
 
@@ -365,16 +369,32 @@ public class MainActivity extends Activity
          * @param params no parameters needed for this task.
          */
         @Override
-        protected List<String> doInBackground(Void... params) {
+        protected List<List<String>> doInBackground(Void... params) {
             try {
+                List<List<String>> combine = new ArrayList<>();
+                combine.add(getDataFromApi());
+                combine.add(getDataFromApi2());
+                att = getDataFromApi3();
 
-                return getDataFromApi();
+
+                return combine;
             } catch (Exception e) {
                 mLastError = e;
                 cancel(true);
                 return null;
             }
         }
+
+       /* @Override
+        protected List<String> doInBackground2(Void... params) {
+            try {
+                return getDataFromApi();
+            } catch (Exception e) {
+                mLastError = e;
+                cancel(true);
+                return null;
+            }
+        } /*
 
 
         /**
@@ -387,8 +407,6 @@ public class MainActivity extends Activity
             String spreadsheetId = "1KNRTAF5XPY-B5M4Dh0pZVpy6g7s3Q-zq9mY3xt5iE28";
             String range = "Sheet1!A3:B";
             List<String> results = new ArrayList<String>();
-            
-
 
             ValueRange response = this.mService.spreadsheets().values()
                     .get(spreadsheetId, range)
@@ -396,16 +414,48 @@ public class MainActivity extends Activity
 
                 List<List<Object>> values = response.getValues();
                 if (values != null) {
-
                     for (List row : values) {
                         results.add(row.get(0) + "");
                     }
                 }
                 return results;
-
         }
 
+        private List<String> getDataFromApi2() throws IOException {
+            String spreadsheetId = "1KNRTAF5XPY-B5M4Dh0pZVpy6g7s3Q-zq9mY3xt5iE28";
+            String range = "Sheet1!A3:C";
+            List<String> results = new ArrayList<String>();
 
+            ValueRange response = this.mService.spreadsheets().values()
+                    .get(spreadsheetId, range)
+                    .execute();
+
+            List<List<Object>> values = response.getValues();
+            if (values != null) {
+                for (List row : values) {
+                    results.add(row.get(1) + "");
+                }
+            }
+            return results;
+        }
+
+        private List<String> getDataFromApi3() throws IOException {
+            String spreadsheetId = "1KNRTAF5XPY-B5M4Dh0pZVpy6g7s3Q-zq9mY3xt5iE28";
+            String range = "Sheet1!A3:C";
+            List<String> results = new ArrayList<String>();
+
+            ValueRange response = this.mService.spreadsheets().values()
+                    .get(spreadsheetId, range)
+                    .execute();
+
+            List<List<Object>> values = response.getValues();
+            if (values != null) {
+                for (List row : values) {
+                    results.add(row.get(2) + "");
+                }
+            }
+            return results;
+        }
 
         @Override
         protected void onPreExecute() {
@@ -414,28 +464,36 @@ public class MainActivity extends Activity
         }
 
         @Override
-        protected void onPostExecute(List<String> output) {
+        protected void onPostExecute(List<List<String>> output) {
             mProgress.hide();
 
-            String reverse = new StringBuffer(pass).reverse().toString();
 
-            for (String string : output) {
-                if(string.equalsIgnoreCase(uid)) {
-                    Intent intent_name = new Intent();
-                    intent_name.setClass(getApplicationContext(), report.class);
-                    startActivity(intent_name);
+            List<String> Uname = output.get(0);
+            List<String> PName = output.get(1);
+            for (String string : Uname) {
+                if (string.equalsIgnoreCase(uid)) {
+                    for (int i =0;i<=PName.size();i++) {
+                        String string2 = PName.get(i);
+                        index = i;
+                        if (string2.equalsIgnoreCase(pass)) {
+                            Intent intent_name = new Intent(MainActivity.this,report.class);
+                            intent_name.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent_name);
+                            break;
+                        }
+                    }
                 }
-                    //if (output == null) {
-              //mOutputText.setText("No results returned.");
-             //else {
-                 //   output.add("Incorrect Credentials");
-               //     mOutputText.setText(TextUtils.join("\n",output));
-              //  }
-
-                //output.add(0, "Data retrieved using the Google Sheets API:");
-                //mOutputText.setText(TextUtils.join("\n", output));
             }
         }
+        /*else {
+                    List<String> printing = new ArrayList<String>();
+                    printing.add("Incorrect Credentials");
+                    mOutputText.setText(TextUtils.join("\n", printing));
+                }*//*
+
+             //output.add(0, "Data retrieved using the Google Sheets API:");
+             //mOutputText.setText(TextUtils.join("\n", output));*/
+
 
         @Override
         protected void onCancelled() {
@@ -458,6 +516,4 @@ public class MainActivity extends Activity
             }
         }
     }
-
-
 }
